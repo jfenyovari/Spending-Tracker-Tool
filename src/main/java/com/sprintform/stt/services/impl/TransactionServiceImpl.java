@@ -30,18 +30,42 @@ public class TransactionServiceImpl implements TransactionService {
 		this.transactionMapper = transactionMapper;
 	}
 
+
+	/**
+	 * Retrieves all transactions.
+	 *
+	 * @return a list of TransactionDTO objects representing the transactions.
+	 */
 	@Override
 	public List<TransactionDTO> findAll() {
 		List<Transaction> transactions = transactionRepository.findAll();
 		return transactionMapper.mapTransactions(transactions);
 	}
 
+	/**
+	 * Searches for transactions based on specified filters.
+	 *
+	 * @param summary  the summary to search for (partially matched).
+	 * @param category the category to filter by.
+	 * @param minSum   the minimum sum of the transactions.
+	 * @param maxSum   the maximum sum of the transactions.
+	 * @param fromDate the minimum date and time of the transactions.
+	 * @param toDate   the maximum date and time of the transactions.
+	 * @return a list of TransactionDTO objects matching the specified filters.
+	 */
 	@Override
 	public List<TransactionDTO> searchByFilters(String summary, CategoryEnum category, int minSum, int maxSum, LocalDateTime fromDate, LocalDateTime toDate) {
 		List<Transaction> transactions = transactionRepository.findBySummaryContainingAndCategoryAndSumBetweenAndPaidBetween(summary, category, minSum, maxSum, fromDate, toDate);
 		return transactionMapper.mapTransactions(transactions);
 	}
 
+	/**
+	 * Finds a transaction by its ID.
+	 *
+	 * @param id the ID of the transaction to find.
+	 * @return the TransactionDTO object representing the found transaction.
+	 * @throws SttException if the transaction with the specified ID is not found.
+	 */
 	@Override
 	public TransactionDTO findTransaction(String id) {
 		ValidationUtils.validateField("id", id);
@@ -50,6 +74,12 @@ public class TransactionServiceImpl implements TransactionService {
 		return transactionOptional.map(transaction -> transactionMapper.map(transaction)).orElseThrow(() -> new SttException(String.format(Constants.ERROR_CANNOT_FIND_TRANSACTION, "id", id), HttpStatus.NOT_FOUND));
 	}
 
+	/**
+	 * Creates a new transaction.
+	 *
+	 * @param transactionDTO the TransactionDTO object representing the transaction to create.
+	 * @throws SttException if any of the required fields in the transactionDTO is invalid.
+	 */
 	@Override
 	public void createTransaction(TransactionDTO transactionDTO) {
 		ValidationUtils.validateField("summary", transactionDTO.getSummary());
@@ -59,6 +89,13 @@ public class TransactionServiceImpl implements TransactionService {
 		transactionRepository.insert(transaction);
 	}
 
+	/**
+	 * Updates an existing transaction.
+	 *
+	 * @param transactionDTO the TransactionDTO object representing the transaction to update.
+	 * @throws SttException if the transaction with the specified ID is not found.
+	 * @throws SttException if any of the required fields in the transactionDTO is invalid.
+	 */
 	@Override
 	public void updateTransaction(TransactionDTO transactionDTO) {
 		String id = transactionDTO.getId();
@@ -74,6 +111,12 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 	}
 
+	/**
+	 * Deletes a transaction by its ID.
+	 *
+	 * @param id the ID of the transaction to delete.
+	 * @throws SttException if the transaction with the specified ID is not found.
+	 */
 	@Override
 	public void deleteTransaction(String id) {
 		Optional<Transaction> byId = transactionRepository.findById(id);
