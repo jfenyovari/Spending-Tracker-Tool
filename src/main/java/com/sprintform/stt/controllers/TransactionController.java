@@ -4,6 +4,7 @@ package com.sprintform.stt.controllers;
 import com.sprintform.stt.dto.TransactionDTO;
 import com.sprintform.stt.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,18 +30,18 @@ public class TransactionController {
 	@PostMapping()
 	public ResponseEntity<String> createTransaction(@RequestBody TransactionDTO transaction) {
 		transactionService.createTransaction(transaction);
-		return ResponseEntity.ok("success");
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
 	@PutMapping()
 	public ResponseEntity<String> updateTransaction(@RequestBody TransactionDTO transaction) {
 		transactionService.updateTransaction(transaction);
-		return ResponseEntity.ok("success");
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	@DeleteMapping()
 	public ResponseEntity<String> deleteTransaction(@RequestParam String id) {
 		transactionService.deleteTransaction(id);
-		return ResponseEntity.ok("success");
+		return ResponseEntity.noContent().build();
 	}
 }
