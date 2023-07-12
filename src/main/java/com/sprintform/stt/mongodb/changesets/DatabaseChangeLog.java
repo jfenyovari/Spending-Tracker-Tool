@@ -12,7 +12,9 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 @ChangeLog
 public class DatabaseChangeLog {
@@ -27,6 +29,9 @@ public class DatabaseChangeLog {
 		mapper.registerModule(new JavaTimeModule());
 		List<Transaction> transactions = mapper.readValue(transactionsJson, new TypeReference<>() {
 		});
+
+		AtomicReference<Integer> days = new AtomicReference<>(100);
+		transactions.forEach(t -> t.setPaid(LocalDateTime.now().minusDays(days.getAndSet(days.get() - 1))));
 
 		transactionRepository.insert(transactions);
 	}

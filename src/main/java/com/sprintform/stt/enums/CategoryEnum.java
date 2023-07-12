@@ -38,6 +38,6 @@ public enum CategoryEnum {
 
 	@Override
 	public String toString() {
-		return name.toLowerCase();
+		return name;
 	}
 }
