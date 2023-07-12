@@ -3,14 +3,12 @@ package com.sprintform.stt.controllers;
 
 import com.sprintform.stt.dto.SearchRequestDTO;
 import com.sprintform.stt.dto.TransactionDTO;
-import com.sprintform.stt.enums.CategoryEnum;
 import com.sprintform.stt.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
