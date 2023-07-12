@@ -1,7 +1,7 @@
 package com.sprintform.stt.mongodb.events;
 
 import com.sprintform.stt.mongodb.entities.Transaction;
-import com.sprintform.stt.services.SequenceGeneratorService;
+import com.sprintform.stt.mongodb.services.SequenceGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;

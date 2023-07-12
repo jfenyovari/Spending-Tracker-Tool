@@ -1,4 +1,4 @@
-package com.sprintform.stt.services;
+package com.sprintform.stt.mongodb.services;
 
 import com.sprintform.stt.mongodb.entities.DatabaseSequence;
 import org.springframework.beans.factory.annotation.Autowired;
