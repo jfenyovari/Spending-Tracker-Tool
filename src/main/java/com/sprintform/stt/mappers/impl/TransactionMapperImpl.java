@@ -5,6 +5,9 @@ import com.sprintform.stt.mappers.TransactionMapper;
 import com.sprintform.stt.mongodb.entities.Transaction;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class TransactionMapperImpl implements TransactionMapper {
 	@Override
@@ -37,5 +40,19 @@ public class TransactionMapperImpl implements TransactionMapper {
 		transaction.setSum(dto.getSum());
 		transaction.setCurrency(dto.getCurrency());
 		return transaction;
+	}
+
+	@Override
+	public List<TransactionDTO> mapTransactions(List<Transaction> transactions) {
+		List<TransactionDTO> result = new ArrayList<>();
+		transactions.forEach(t -> result.add(map(t)));
+		return result;
+	}
+
+	@Override
+	public List<Transaction> mapDtos(List<TransactionDTO> dtos) {
+		List<Transaction> result = new ArrayList<>();
+		dtos.forEach(t -> result.add(map(t)));
+		return result;
 	}
 }

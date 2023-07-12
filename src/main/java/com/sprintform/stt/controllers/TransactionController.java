@@ -1,13 +1,16 @@
 package com.sprintform.stt.controllers;
 
 
+import com.sprintform.stt.dto.SearchRequestDTO;
 import com.sprintform.stt.dto.TransactionDTO;
+import com.sprintform.stt.enums.CategoryEnum;
 import com.sprintform.stt.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -19,12 +22,23 @@ public class TransactionController {
 
 	@GetMapping("/list")
 	public ResponseEntity<List<TransactionDTO>> getTransactions() {
-		return ResponseEntity.ok(transactionService.getTransactions());
+		return ResponseEntity.ok(transactionService.findAll());
+	}
+
+	@GetMapping("/search")
+	public ResponseEntity<List<TransactionDTO>> findTransactions(@RequestBody SearchRequestDTO searchRequestDTO) {
+		return ResponseEntity.ok(transactionService.searchByFilters(
+				searchRequestDTO.getSummary(),
+				searchRequestDTO.getCategory(),
+				searchRequestDTO.getMinSum(),
+				searchRequestDTO.getMaxSum(),
+				searchRequestDTO.getFrom(),
+				searchRequestDTO.getTo()));
 	}
 
 	@GetMapping()
 	public ResponseEntity<TransactionDTO> getTransaction(@RequestParam String id) {
-		return ResponseEntity.ok(transactionService.getTransaction(id));
+		return ResponseEntity.ok(transactionService.findTransaction(id));
 	}
 
 	@PostMapping()

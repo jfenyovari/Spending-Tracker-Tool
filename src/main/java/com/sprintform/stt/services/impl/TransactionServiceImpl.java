@@ -1,6 +1,7 @@
 package com.sprintform.stt.services.impl;
 
 import com.sprintform.stt.dto.TransactionDTO;
+import com.sprintform.stt.enums.CategoryEnum;
 import com.sprintform.stt.mappers.TransactionMapper;
 import com.sprintform.stt.mongodb.entities.Transaction;
 import com.sprintform.stt.mongodb.repositories.TransactionRepository;
@@ -8,7 +9,7 @@ import com.sprintform.stt.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,15 +26,20 @@ public class TransactionServiceImpl implements TransactionService {
 		this.transactionMapper = transactionMapper;
 	}
 
-	public List<TransactionDTO> getTransactions() {
-		List<Transaction> all = transactionRepository.findAll();
-		List<TransactionDTO> result = new ArrayList<>();
-		all.forEach(t -> result.add(transactionMapper.map(t)));
-		return result;
+	@Override
+	public List<TransactionDTO> findAll() {
+		List<Transaction> transactions = transactionRepository.findAll();
+		return transactionMapper.mapTransactions(transactions);
 	}
 
 	@Override
-	public TransactionDTO getTransaction(String id) {
+	public List<TransactionDTO> searchByFilters(String summary, CategoryEnum category, int minSum, int maxSum, LocalDateTime fromDate, LocalDateTime toDate) {
+		List<Transaction> transactions = transactionRepository.findBySummaryContainingAndCategoryAndSumBetweenAndPaidBetween(summary, category, minSum, maxSum, fromDate, toDate);
+		return transactionMapper.mapTransactions(transactions);
+	}
+
+	@Override
+	public TransactionDTO findTransaction(String id) {
 		Optional<Transaction> transactionOptional = transactionRepository.findById(id);
 		return transactionOptional.map(transaction -> transactionMapper.map(transaction)).orElse(null);
 	}
