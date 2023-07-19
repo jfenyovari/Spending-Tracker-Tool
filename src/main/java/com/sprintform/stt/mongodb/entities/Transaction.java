@@ -24,13 +24,9 @@ public class Transaction {
 
 	@Id
 	private String id;
-
 	private String summary;
-
 	private CategoryEnum category;
-
 	private int sum;
-
 	private String currency;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")

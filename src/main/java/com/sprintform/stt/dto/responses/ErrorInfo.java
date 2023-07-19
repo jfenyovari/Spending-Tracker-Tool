@@ -1,4 +1,4 @@
-package com.sprintform.stt.dto;
+package com.sprintform.stt.dto.responses;
 
 public class ErrorInfo {
 

@@ -1,4 +1,4 @@
-package com.sprintform.stt.dto;
+package com.sprintform.stt.dto.requests;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sprintform.stt.enums.CategoryEnum;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SearchRequestDTO {
+public class TransactionSearchRequest {
 
 	private String summary;
 	private CategoryEnum category;

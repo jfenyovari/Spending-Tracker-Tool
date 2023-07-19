@@ -1,37 +1,40 @@
 package com.sprintform.stt.controllers;
 
 
-import com.sprintform.stt.dto.SearchRequestDTO;
+import com.sprintform.stt.dto.requests.TransactionSearchRequest;
 import com.sprintform.stt.dto.TransactionDTO;
 import com.sprintform.stt.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/transaction")
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RequestMapping("/api/transaction")
 public class TransactionController {
 
 	@Autowired
 	private TransactionService transactionService;
 
 	@GetMapping("/list")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<List<TransactionDTO>> getTransactions() {
 		return ResponseEntity.ok(transactionService.findAll());
 	}
 
 	@GetMapping("/search")
-	public ResponseEntity<List<TransactionDTO>> findTransactions(@RequestBody SearchRequestDTO searchRequestDTO) {
+	public ResponseEntity<List<TransactionDTO>> findTransactions(@RequestBody TransactionSearchRequest searchRequest) {
 		return ResponseEntity.ok(transactionService.searchByFilters(
-				searchRequestDTO.getSummary(),
-				searchRequestDTO.getCategory(),
-				searchRequestDTO.getMinSum(),
-				searchRequestDTO.getMaxSum(),
-				searchRequestDTO.getFrom(),
-				searchRequestDTO.getTo()));
+				searchRequest.getSummary(),
+				searchRequest.getCategory(),
+				searchRequest.getMinSum(),
+				searchRequest.getMaxSum(),
+				searchRequest.getFrom(),
+				searchRequest.getTo()));
 	}
 
 	@GetMapping()

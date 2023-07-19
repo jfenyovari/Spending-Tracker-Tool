@@ -1,6 +1,6 @@
 package com.sprintform.stt.controllers;
 
-import com.sprintform.stt.dto.ErrorInfo;
+import com.sprintform.stt.dto.responses.ErrorInfo;
 import com.sprintform.stt.exceptions.SttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
