@@ -35,4 +35,16 @@ public class User {
 		this.password = password;
 		this.createdDate = createdDate;
 	}
+
+	public User(String username, String email, String password, LocalDateTime createdDate, Set<Role> roles) {
+		this.username = username;
+		this.email = email;
+		this.password = password;
+		this.createdDate = createdDate;
+		this.roles = roles;
+	}
+
+	public User(String id) {
+		this.id = id;
+	}
 }

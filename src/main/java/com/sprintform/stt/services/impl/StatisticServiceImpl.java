@@ -30,9 +30,9 @@ public class StatisticServiceImpl implements StatisticService {
 	 * @return The predicted costs for the next month.
 	 */
 	@Override
-	public long predictCostsForNextMonth(int monthsConsidered) {
+	public long predictCostsForNextMonth(int monthsConsidered, String userId) {
 		int currentMonth = LocalDateTime.now().getMonthValue();
-		List<Transaction> previousTransactions = transactionRepository.findByPaidBetween(DateTimeUtils.getFirstDayOfMonth(currentMonth - monthsConsidered), DateTimeUtils.getLastDayOfMonth(currentMonth - 1));
+		List<Transaction> previousTransactions = transactionRepository.findByPaidBetweenAndUserId(DateTimeUtils.getFirstDayOfMonth(currentMonth - monthsConsidered), DateTimeUtils.getLastDayOfMonth(currentMonth - 1), userId);
 
 		long sum = previousTransactions.stream()
 				.mapToLong(Transaction::getSum)
@@ -48,15 +48,15 @@ public class StatisticServiceImpl implements StatisticService {
 	 * @return The predicted remaining costs for the current month.
 	 */
 	@Override
-	public long predictRemainingCostsForCurrentMonth(int monthsConsidered) {
+	public long predictRemainingCostsForCurrentMonth(int monthsConsidered, String userId) {
 		int currentMonth = LocalDateTime.now().getMonthValue();
-		List<Transaction> previousTransactions = transactionRepository.findByPaidBetween(DateTimeUtils.getFirstDayOfMonth(currentMonth - monthsConsidered), DateTimeUtils.getLastDayOfMonth(currentMonth - 1));
+		List<Transaction> previousTransactions = transactionRepository.findByPaidBetweenAndUserId(DateTimeUtils.getFirstDayOfMonth(currentMonth - monthsConsidered), DateTimeUtils.getLastDayOfMonth(currentMonth - 1), userId);
 
 		long previousPredictionSum = previousTransactions.stream()
 				.mapToLong(Transaction::getSum)
 				.sum();
 
-		List<Transaction> currentMonthTransactions = transactionRepository.findByPaidBetween(DateTimeUtils.getFirstDayOfMonth(currentMonth), LocalDateTime.now());
+		List<Transaction> currentMonthTransactions = transactionRepository.findByPaidBetweenAndUserId(DateTimeUtils.getFirstDayOfMonth(currentMonth), LocalDateTime.now(), userId);
 		long currentMonthSum = currentMonthTransactions.stream()
 				.mapToLong(Transaction::getSum)
 				.sum();
@@ -70,9 +70,9 @@ public class StatisticServiceImpl implements StatisticService {
 	 * @return A map of category to total cost for the specified months.
 	 */
 	@Override
-	public Map<CategoryEnum, Integer> collectCostsByCategory(int monthsConsidered) {
+	public Map<CategoryEnum, Integer> collectCostsByCategory(int monthsConsidered, String userId) {
 		int currentMonth = LocalDateTime.now().getMonthValue();
-		List<Transaction> transactions = transactionRepository.findByPaidBetween(DateTimeUtils.getFirstDayOfMonth(currentMonth - monthsConsidered), DateTimeUtils.getLastDayOfMonth(currentMonth - 1));
+		List<Transaction> transactions = transactionRepository.findByPaidBetweenAndUserId(DateTimeUtils.getFirstDayOfMonth(currentMonth - monthsConsidered), DateTimeUtils.getLastDayOfMonth(currentMonth - 1), userId);
 		return transactions.stream()
 				.collect(Collectors.toMap(
 						Transaction::getCategory,
@@ -88,8 +88,8 @@ public class StatisticServiceImpl implements StatisticService {
 	 * @return A map of category to predicted cost for the next month.
 	 */
 	@Override
-	public Map<CategoryEnum, Integer> predictCostsForNextMonthByCategory(int monthsConsidered) {
-		Map<CategoryEnum, Integer> costsByCategoryMap = collectCostsByCategory(monthsConsidered);
+	public Map<CategoryEnum, Integer> predictCostsForNextMonthByCategory(int monthsConsidered, String userId) {
+		Map<CategoryEnum, Integer> costsByCategoryMap = collectCostsByCategory(monthsConsidered, userId);
 		costsByCategoryMap.replaceAll((key, value) -> value / monthsConsidered);
 		return costsByCategoryMap;
 	}

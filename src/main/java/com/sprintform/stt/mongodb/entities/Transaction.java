@@ -28,7 +28,7 @@ public class Transaction {
 	private CategoryEnum category;
 	private int sum;
 	private String currency;
-
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
 	private LocalDateTime paid;
+	private String userId;
 }

@@ -24,4 +24,5 @@ public class TransactionSearchRequest {
 	private LocalDateTime from;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
 	private LocalDateTime to;
+	private String userId;
 }

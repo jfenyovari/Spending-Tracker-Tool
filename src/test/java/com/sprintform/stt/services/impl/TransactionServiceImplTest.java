@@ -69,6 +69,7 @@ class TransactionServiceImplTest {
 		int maxSum = 200;
 		LocalDateTime fromDate = LocalDateTime.now();
 		LocalDateTime toDate = LocalDateTime.now();
+		String userId ="id";
 
 		List<Transaction> transactions = new ArrayList<>();
 		transactions.add(new Transaction());
@@ -79,14 +80,14 @@ class TransactionServiceImplTest {
 		transactionDTOs.add(new TransactionDTO());
 
 		// Mock behavior
-		when(transactionRepository.findBySummaryContainingAndCategoryAndSumBetweenAndPaidBetween(summary, category, minSum, maxSum, fromDate, toDate)).thenReturn(transactions);
+		when(transactionRepository.findBySummaryContainingAndCategoryAndSumBetweenAndPaidBetweenAndUserId(summary, category, minSum, maxSum, fromDate, toDate, userId)).thenReturn(transactions);
 		when(transactionMapper.mapTransactions(transactions)).thenReturn(transactionDTOs);
 
 		// Perform the method call
-		List<TransactionDTO> result = transactionService.searchByFilters(summary, category, minSum, maxSum, fromDate, toDate);
+		List<TransactionDTO> result = transactionService.searchByFilters(summary, category, minSum, maxSum, fromDate, toDate, userId);
 
 		// Verify the results
-		verify(transactionRepository, times(1)).findBySummaryContainingAndCategoryAndSumBetweenAndPaidBetween(summary, category, minSum, maxSum, fromDate, toDate);
+		verify(transactionRepository, times(1)).findBySummaryContainingAndCategoryAndSumBetweenAndPaidBetweenAndUserId(summary, category, minSum, maxSum, fromDate, toDate, userId);
 		verify(transactionMapper, times(1)).mapTransactions(transactions);
 		Assertions.assertEquals(transactionDTOs, result);
 	}

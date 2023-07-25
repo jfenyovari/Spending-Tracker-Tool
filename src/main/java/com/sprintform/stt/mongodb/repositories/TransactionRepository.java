@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface TransactionRepository extends MongoRepository<Transaction, String> {
 
-	List<Transaction> findByCategoryAndPaidBetween(CategoryEnum category, LocalDateTime from, LocalDateTime to);
+	List<Transaction> findByCategoryAndPaidBetweenAndUserId(CategoryEnum category, LocalDateTime from, LocalDateTime to, String userId);
 
-	List<Transaction> findByPaidBetween(LocalDateTime from, LocalDateTime to);
+	List<Transaction> findByPaidBetweenAndUserId(LocalDateTime from, LocalDateTime to, String userId);
 
-	List<Transaction> findBySummaryContainingAndCategoryAndSumBetweenAndPaidBetween(String summary, CategoryEnum category, int minSum, int maxSum, LocalDateTime from, LocalDateTime to);
+	List<Transaction> findBySummaryContainingAndCategoryAndSumBetweenAndPaidBetweenAndUserId(String summary, CategoryEnum category, int minSum, int maxSum, LocalDateTime from, LocalDateTime to, String userId);
 }

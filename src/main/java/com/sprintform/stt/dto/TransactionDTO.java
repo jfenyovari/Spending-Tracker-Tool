@@ -20,6 +20,7 @@ public class TransactionDTO {
 	private CategoryEnum category;
 	private int sum;
 	private String currency;
+	private String userId;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
 	private LocalDateTime paid;

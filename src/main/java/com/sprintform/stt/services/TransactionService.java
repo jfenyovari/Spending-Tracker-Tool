@@ -11,7 +11,7 @@ public interface TransactionService {
 
 	List<TransactionDTO> findAll();
 
-	List<TransactionDTO> searchByFilters(String summary, CategoryEnum category, int minSum, int maxSum, LocalDateTime fromDate, LocalDateTime toDate);
+	List<TransactionDTO> searchByFilters(String summary, CategoryEnum category, int minSum, int maxSum, LocalDateTime fromDate, LocalDateTime toDate, String userId);
 
 	TransactionDTO findTransaction(String id);
 

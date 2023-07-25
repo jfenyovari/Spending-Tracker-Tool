@@ -7,6 +7,7 @@ import com.sprintform.stt.exceptions.SttException;
 import com.sprintform.stt.mappers.TransactionMapper;
 import com.sprintform.stt.mongodb.entities.Transaction;
 import com.sprintform.stt.mongodb.repositories.TransactionRepository;
+import com.sprintform.stt.mongodb.repositories.UserRepository;
 import com.sprintform.stt.services.TransactionService;
 import com.sprintform.stt.utils.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,14 @@ public class TransactionServiceImpl implements TransactionService {
 
 	private TransactionMapper transactionMapper;
 
+	private UserRepository userRepository;
+
 	@Autowired
-	public TransactionServiceImpl(TransactionRepository transactionRepository, TransactionMapper transactionMapper) {
+	public TransactionServiceImpl(TransactionRepository transactionRepository, TransactionMapper transactionMapper, UserRepository userRepository) {
 		this.transactionRepository = transactionRepository;
 		this.transactionMapper = transactionMapper;
+		this.userRepository = userRepository;
 	}
-
 
 	/**
 	 * Retrieves all transactions.
@@ -54,8 +57,8 @@ public class TransactionServiceImpl implements TransactionService {
 	 * @return a list of TransactionDTO objects matching the specified filters.
 	 */
 	@Override
-	public List<TransactionDTO> searchByFilters(String summary, CategoryEnum category, int minSum, int maxSum, LocalDateTime fromDate, LocalDateTime toDate) {
-		List<Transaction> transactions = transactionRepository.findBySummaryContainingAndCategoryAndSumBetweenAndPaidBetween(summary, category, minSum, maxSum, fromDate, toDate);
+	public List<TransactionDTO> searchByFilters(String summary, CategoryEnum category, int minSum, int maxSum, LocalDateTime fromDate, LocalDateTime toDate, String userId) {
+		List<Transaction> transactions = transactionRepository.findBySummaryContainingAndCategoryAndSumBetweenAndPaidBetweenAndUserId(summary, category, minSum, maxSum, fromDate, toDate, userId);
 		return transactionMapper.mapTransactions(transactions);
 	}
 
@@ -83,8 +86,14 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public void createTransaction(TransactionDTO transactionDTO) {
 		ValidationUtils.validateField("summary", transactionDTO.getSummary());
+		ValidationUtils.validateField("userId", transactionDTO.getUserId());
 		ValidationUtils.validateField("currency", transactionDTO.getCurrency());
 		ValidationUtils.validateField("paid", transactionDTO.getPaid().toString());
+
+		if (userRepository.findById(transactionDTO.getUserId()).isEmpty()) {
+			throw new SttException("User does not exist", HttpStatus.NOT_FOUND);
+		}
+
 		Transaction transaction = transactionMapper.map(transactionDTO);
 		transactionRepository.insert(transaction);
 	}

@@ -97,7 +97,6 @@ public class SecurityConfig {
 		source.registerCorsConfiguration("/**", config);
 		FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
 
-		// should be set order to -100 because we need to CorsFilter before SpringSecurityFilter
 		bean.setOrder(CORS_FILTER_ORDER);
 		return bean;
 	}

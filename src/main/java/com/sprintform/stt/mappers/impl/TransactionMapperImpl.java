@@ -10,6 +10,7 @@ import java.util.List;
 
 @Component
 public class TransactionMapperImpl implements TransactionMapper {
+
 	@Override
 	public TransactionDTO map(Transaction transaction) {
 		if (transaction == null) {
@@ -23,6 +24,7 @@ public class TransactionMapperImpl implements TransactionMapper {
 		dto.setSummary(transaction.getSummary());
 		dto.setSum(transaction.getSum());
 		dto.setCurrency(transaction.getCurrency());
+		dto.setUserId(transaction.getUserId());
 		return dto;
 	}
 
@@ -39,6 +41,7 @@ public class TransactionMapperImpl implements TransactionMapper {
 		transaction.setSummary(dto.getSummary());
 		transaction.setSum(dto.getSum());
 		transaction.setCurrency(dto.getCurrency());
+		transaction.setUserId(dto.getUserId());
 		return transaction;
 	}
 

@@ -21,6 +21,8 @@ import static org.mockito.Mockito.*;
 
 class StatisticServiceImplTest {
 
+	private static final String USER_ID = "1";
+
 	@Mock
 	private TransactionRepository transactionRepository;
 
@@ -46,13 +48,13 @@ class StatisticServiceImplTest {
 		previousTransactions.add(createTransaction(300));
 
 		// Mock behavior
-		when(transactionRepository.findByPaidBetween(fromDate, toDate)).thenReturn(previousTransactions);
+		when(transactionRepository.findByPaidBetweenAndUserId(fromDate, toDate, USER_ID)).thenReturn(previousTransactions);
 
 		// Perform the method call
-		long result = statisticService.predictCostsForNextMonth(monthsConsidered);
+		long result = statisticService.predictCostsForNextMonth(monthsConsidered, USER_ID);
 
 		// Verify the results
-		verify(transactionRepository, times(1)).findByPaidBetween(fromDate, toDate);
+		verify(transactionRepository, times(1)).findByPaidBetweenAndUserId(fromDate, toDate, USER_ID);
 		long sum = previousTransactions.stream().mapToLong(Transaction::getSum).sum();
 		long expected = sum / monthsConsidered;
 		Assertions.assertEquals(expected, result);
@@ -72,13 +74,13 @@ class StatisticServiceImplTest {
 		transactions.add(createTransaction(CategoryEnum.FOOD, 300));
 
 		// Mock behavior
-		when(transactionRepository.findByPaidBetween(fromDate, toDate)).thenReturn(transactions);
+		when(transactionRepository.findByPaidBetweenAndUserId(fromDate, toDate, USER_ID)).thenReturn(transactions);
 
 		// Perform the method call
-		Map<CategoryEnum, Integer> result = statisticService.collectCostsByCategory(monthsConsidered);
+		Map<CategoryEnum, Integer> result = statisticService.collectCostsByCategory(monthsConsidered, USER_ID);
 
 		// Verify the results
-		verify(transactionRepository, times(1)).findByPaidBetween(fromDate, toDate);
+		verify(transactionRepository, times(1)).findByPaidBetweenAndUserId(fromDate, toDate, USER_ID);
 		Map<CategoryEnum, Integer> expected = transactions.stream()
 				.collect(Collectors.toMap(Transaction::getCategory, Transaction::getSum, Integer::sum));
 		Assertions.assertEquals(expected, result);
@@ -92,7 +94,7 @@ class StatisticServiceImplTest {
 		return transaction;
 	}
 
-	// Helper method to create a transaction with the given sum (default category: CATEGORY_A)
+	// Helper method to create a transaction with the given sum (default category: CATEGORY_FINANCIAL)
 	private Transaction createTransaction(int sum) {
 		return createTransaction(CategoryEnum.FINANCIAL, sum);
 	}
